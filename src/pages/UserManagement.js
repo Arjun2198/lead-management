@@ -16,8 +16,9 @@ import {
   Alert
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, setDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
+import { v4 as uuidv4 } from "uuid"; // npm install uuid
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
@@ -66,7 +67,7 @@ export default function UserManagement() {
   const handleOpenModal = (user = null) => {
     if (user) {
       setEditUser(user);
-      setName(user.name);
+      setName(user.name || user.displayName || "");
       setEmail(user.email);
       setRole(user.role);
       setTeamMembers(user.teamMembers);
@@ -85,22 +86,29 @@ export default function UserManagement() {
   // Save user
   const handleSaveUser = async () => {
     const payload = {
-      ...(role === "Admin" ? { displayName: name } : { name }),
+      name,
       email,
       role,
-      teamMembers: role === "Manager" ? teamMembers.split(",").map((m) => m.trim()) : []
+      teamMembers: role === "Manager" ? teamMembers.split(",").map((m) => m.trim()) : [],
+      createdAt: new Date()
     };
 
-    if (editUser) {
-      await updateDoc(doc(db, "users", editUser.id), payload);
-      setSnackbar({ open: true, message: `User "${name}" updated successfully!`, severity: "success" });
-    } else {
-      await addDoc(collection(db, "users"), payload);
-      setSnackbar({ open: true, message: `User "${name}" added successfully!`, severity: "success" });
-    }
+    try {
+      if (editUser) {
+        await updateDoc(doc(db, "users", editUser.id), payload);
+        setSnackbar({ open: true, message: `User "${name}" updated successfully!`, severity: "success" });
+      } else {
+        const generatedId = uuidv4();
+        await setDoc(doc(db, "users", generatedId), payload);
+        setSnackbar({ open: true, message: `User "${name}" added successfully!`, severity: "success" });
+      }
 
-    fetchUsers();
-    handleCloseModal();
+      fetchUsers();
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error saving user:", error);
+      setSnackbar({ open: true, message: "Error saving user!", severity: "error" });
+    }
   };
 
   // Delete user

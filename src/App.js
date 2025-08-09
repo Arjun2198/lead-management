@@ -5,6 +5,7 @@ import LeadsPage from './pages/LeadsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import MainLayout from './layouts/MainLayout';
 import UserManagement from './pages/UserManagement';
+import SignupPage from './pages/SignupPage';
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<LoginPage />} />
-
+        <Route path="/signup" element={<SignupPage />} />
         {/* Protected Routes */}
         <Route path="/dashboard" element={
           <ProtectedRoute>
