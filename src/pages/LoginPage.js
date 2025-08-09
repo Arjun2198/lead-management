@@ -37,7 +37,6 @@ const LoginPage = () => {
       localStorage.setItem('userRole', userData.role);
       localStorage.setItem('userName', userData.displayName || user.email);
       localStorage.setItem('uid', user.uid);
-
       navigate('/dashboard');
     } catch (err) {
       if (err.code === 'auth/user-not-found') {
@@ -52,6 +51,7 @@ const LoginPage = () => {
     } finally {
       setLoading(false);
     }
+   
   };
 
   return (

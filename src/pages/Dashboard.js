@@ -1,16 +1,14 @@
-import React from 'react';
-import { Typography, Container } from '@mui/material';
+// src/pages/Dashboard.js
+import React from "react";
+import { Typography } from "@mui/material";
 
-const Dashboard = () => {
-  const userName = localStorage.getItem('userName') || 'User';
-  const role = localStorage.getItem('userRole');
-
+export default function Dashboard() {
   return (
-    <Container sx={{ mt: 5 }}>
-      <Typography variant="h4" gutterBottom>Welcome, {userName}</Typography>
-      <Typography variant="subtitle1" color="textSecondary">Role: {role}</Typography>
-    </Container>
+    <div style={{ padding: "20px" }}>
+      <Typography variant="h4" gutterBottom>
+        Dashboard
+      </Typography>
+      <Typography>Welcome to the Lead Management Dashboard!</Typography>
+    </div>
   );
-};
-
-export default Dashboard;
+}
